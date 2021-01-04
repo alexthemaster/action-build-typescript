@@ -1,0 +1,21 @@
+name: 'TypeScript Build'
+description: 'Build TypeScript code and optionally push the compiled code to a different branch'
+author: 'Kovacs Alex'
+inputs: 
+  pushToBranch: 
+    description: 'Whether or not to push the compiled code to a different branch'
+    required: false
+    default: false
+  branch:
+    description: 'The name of the branch the action should push the compiled code'
+    required: false
+    default: 'dist'
+  author:
+    description: 'The author to use for commits'
+    required: false
+  githubToken:
+    description: 'Your GitHub secret token (hint: use ${{ secrets.GITHUB_TOKEN }} )'
+    required: false
+runs: 
+  using: 'node12'
+  main: src/main.js
