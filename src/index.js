@@ -1,3 +1,5 @@
+
+
 const core = require('@actions/core');
 const github = require('@actions/github');
 const io = require('@actions/io');
@@ -8,16 +10,10 @@ const { join } = require('path');
 // Inputs
 const pushToBranch = Boolean(core.getInput('pushToBranch'));
 const branchName = core.getInput('branch');
-let author = core.getInput('author');
 const githubToken = core.getInput('githubToken');
 const directory = process.env.GITHUB_WORKSPACE;
 
-// Checks
-if (pushToBranch) {
-    if (typeof branchName !== 'string') return exit('The branch input is supposed to be a string (example: "dist")');
-    if ((author && typeof author !== 'string') || !author) author = github.context.actor;
-    if (!githubToken || typeof githubToken !== 'string') return exit('A GitHub secret token is a required input for pushing code (hint: use ${{ secrets.GITHUB_TOKEN }} )');
-}
+if (pushToBranch && !githubToken) return exit('A GitHub secret token is a required input for pushing code (hint: use ${{ secrets.GITHUB_TOKEN }} )');
 
 (async () => {
     const tsconfigPath = join(directory, 'tsconfig.json');
@@ -27,10 +23,14 @@ if (pushToBranch) {
 
         const tsconfig = require(tsconfigPath);
         const outDir = tsconfig.compilerOptions.outDir ? tsconfig.compilerOptions.outDir : directory;
-        // Install TSC
+        // Install tsc
+        core.info('Installing tsc');
         await exec('npm i --g typescript');
-        // Install dependencies
-        await exec(`npm ci`, [], { cwd: directory });
+
+        core.info('Installing dependencies (if package-lock.json is present)');
+        // We use the catch here because not everyone will have a package-lock.json
+        await exec(`npm ci`, [], { cwd: directory }).catch(_err => { });
+
         // Build project
         const build = await exec(`tsc`, [], { cwd: directory });
         if (build !== 0) return exit('Something went wrong while building.');
@@ -46,23 +46,32 @@ if (pushToBranch) {
 
         const branchExists = branches.data.some(branch => branch.name.toLowerCase() === branchName);
         // Set up Git user
-        await exec(`git config --global user.name ${author}`);
+        core.info('Configuring Git user');
+        await exec(`git config --global user.name actions-user`);
         await exec(`git config --global user.email action@github.com`);
+
+        core.info('Cloning branch')
         const clone = await exec(`git clone https://${github.context.actor}:${githubToken}@github.com/${owner}/${repo}.git branch-${branchName}`);
+        if (clone !== 0) return exit('Something went wrong while cloning the repository.');
         // Check out to branch
         await exec(`${branchExists ? `git checkout ${branchName}` : `git checkout --orphan ${branchName}`}`, [], { cwd: `branch-${branchName}` });
-        if (clone !== 0) return exit('Something went wrong while cloning the repository.');
 
         // Copy compiled files and package* files
+        core.info('Copying compiled files and package* files');
         await io.cp(join(directory, outDir), `branch-${branchName}`, { recursive: true });
         await io.cp(join(directory, 'package.json'), `branch-${branchName}`);
         await io.cp(join(directory, 'package-lock.json'), `branch-${branchName}`);
 
         // Commit files
+        core.info('Adding and commiting files');
         await exec(`git add ."`, [], { cwd: `branch-${branchName}` });
-        await exec(`git commit -m "build: ${github.context.sha}"`, [], { cwd: `branch-${branchName}` });
+        // We use the catch here because sometimes the code itself may not have changed
+        await exec(`git commit -m "build: ${github.context.sha}"`, [], { cwd: `branch-${branchName}` }).catch(_err => core.warning("Couldn't commit new changes because there aren't any"));
+
         // Push files
+        core.info('Pushing new changes');
         await exec(`git push origin HEAD:${branchName}`, [], { cwd: `branch-${branchName}` });
+
         process.exit(0);
     } catch (error) {
         exit(`Something went wrong: ${error}`);
@@ -72,4 +81,4 @@ if (pushToBranch) {
 function exit(error) {
     core.setFailed(error);
     process.exit();
-}
+} 
