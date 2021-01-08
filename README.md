@@ -19,7 +19,7 @@ jobs:
               with:
                 node-version: 12
             - name: Build and push
-              uses: alexthemaster/action-build-typescript@latest
+              uses: alexthemaster/action-build-typescript@<check latest release on the right side> # (looks like this: v1.0.0)
               with:
                 pushToBranch: true # optional; can either be true or false | defaults to false
                 branch: 'dist' # optional; the name of the branch the action should push the compiled code to | defaults to dist
