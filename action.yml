@@ -10,12 +10,9 @@ inputs:
     description: 'The name of the branch the action should push the compiled code'
     required: false
     default: 'dist'
-  author:
-    description: 'The author to use for commits'
-    required: false
   githubToken:
-    description: 'Your GitHub secret token (hint: use ${{ secrets.GITHUB_TOKEN }} )'
+    description: 'Your GitHub secret token'
     required: false
 runs: 
   using: 'node12'
-  main: src/main.js
+  main: src/index.js
