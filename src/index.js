@@ -50,7 +50,7 @@ if (pushToBranch) {
         await exec(`git config --global user.email action@github.com`);
         const clone = await exec(`git clone https://${github.context.actor}:${githubToken}@github.com/${owner}/${repo}.git branch-${branchName}`);
         // Check out to branch
-        await exec(`${branchExists ? `git checkout ${branchName}` : `git checkout --orphan ${branchName}`}`);
+        await exec(`${branchExists ? `git checkout ${branchName}` : `git checkout --orphan ${branchName}`}`, [], { cwd: `branch-${branchName}` });
         if (clone !== 0) return exit('Something went wrong while cloning the repository.');
 
         // Copy compiled files and package* files
