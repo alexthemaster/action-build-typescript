@@ -8,12 +8,12 @@ const { access } = require('fs').promises;
 const { join } = require('path');
 
 // Inputs
-const pushToBranch = Boolean(core.getInput('pushToBranch'));
+const pushToBranch = core.getInput('pushToBranch');
 const branchName = core.getInput('branch');
 const githubToken = core.getInput('githubToken');
 const directory = process.env.GITHUB_WORKSPACE;
 
-if (pushToBranch && !githubToken) return exit('A GitHub secret token is a required input for pushing code (hint: use ${{ secrets.GITHUB_TOKEN }} )');
+if (pushToBranch == true && !githubToken) return exit('A GitHub secret token is a required input for pushing code (hint: use ${{ secrets.GITHUB_TOKEN }} )');
 
 (async () => {
     const tsconfigPath = join(directory, 'tsconfig.json');
@@ -34,7 +34,7 @@ if (pushToBranch && !githubToken) return exit('A GitHub secret token is a requir
         // Build project
         const build = await exec(`tsc`, [], { cwd: directory });
         if (build !== 0) return exit('Something went wrong while building.');
-        if (!pushToBranch) return process.exit(0);
+        if (pushToBranch == 'false') return process.exit(0);
 
         const octokit = github.getOctokit(githubToken);
 
