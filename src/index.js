@@ -32,6 +32,7 @@ if (pushToBranch == true && !githubToken) return exit('A GitHub secret token is 
         await exec(`npm ci`, [], { cwd: directory }).catch(_err => { });
 
         // Build project
+        console.info('Building project')
         const build = await exec(`tsc`, [], { cwd: directory });
         if (build !== 0) return exit('Something went wrong while building.');
         if (pushToBranch == 'false') return process.exit(0);
