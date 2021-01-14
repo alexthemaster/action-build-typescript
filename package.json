@@ -1,6 +1,6 @@
 {
   "name": "action-build-typescript",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A GitHub Action that builds your TypeScript projects and optionally also pushes the generated code to a different branch on your repository",
   "main": "src/index.mjs",
   "repository": {
