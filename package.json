@@ -19,9 +19,9 @@
   },
   "homepage": "https://github.com/alexthemaster/action-build-typescript#readme",
   "dependencies": {
-    "@actions/core": "^1.3.0",
-    "@actions/exec": "^1.0.4",
+    "@actions/core": "^1.4.0",
+    "@actions/exec": "^1.1.0",
     "@actions/github": "^4.0.0",
-    "@actions/io": "^1.1.0"
+    "@actions/io": "^1.1.1"
   }
 }
