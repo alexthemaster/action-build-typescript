@@ -20,8 +20,8 @@
   "homepage": "https://github.com/alexthemaster/action-build-typescript#readme",
   "dependencies": {
     "@actions/core": "^1.6.0",
-    "@actions/exec": "^1.1.0",
+    "@actions/exec": "^1.1.1",
     "@actions/github": "^4.0.0",
-    "@actions/io": "^1.1.1"
+    "@actions/io": "^1.1.2"
   }
 }
