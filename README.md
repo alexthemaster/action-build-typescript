@@ -13,11 +13,7 @@ jobs:
         runs-on: ubuntu-latest
         steps: 
             - name: Checkout project
-              uses: actions/checkout@v2
-            - name: Setup Node.js
-              uses: actions/setup-node@v2.1.4
-              with:
-                node-version: 12
+              uses: actions/checkout@v3
             - name: Build and push
               uses: alexthemaster/action-build-typescript@v. # check the releases tab on the right for versions (looks like this: v1.0.0)
               # use this if you want the sharpest of cutting edges (can and probably WILL break from time to time)

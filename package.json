@@ -1,6 +1,6 @@
 {
   "name": "action-build-typescript",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "A GitHub Action that builds your TypeScript projects and optionally also pushes the generated code to a different branch on your repository",
   "main": "src/index.mjs",
   "repository": {
@@ -12,7 +12,7 @@
     "action",
     "github action"
   ],
-  "author": "Kovacs Alex <alex@atm.moe>",
+  "author": "Alex Kovacs <alexdemaster@proton.me>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/alexthemaster/action-build-typescript/issues"

@@ -1,6 +1,6 @@
 name: 'TypeScript Build'
 description: 'Build TypeScript code and optionally push the compiled code to a different branch'
-author: 'Kovacs Alex'
+author: 'Alex Kovacs'
 inputs: 
   pushToBranch: 
     description: 'Whether or not to push the compiled code to a different branch'
@@ -14,5 +14,5 @@ inputs:
     description: 'Your GitHub secret token'
     required: false
 runs: 
-  using: 'node12'
+  using: 'node16'
   main: src/index.js
