@@ -30,12 +30,8 @@ if (pushToBranch == true && !githubToken)
     core.info("Installing tsc");
     await exec("npm i --g typescript");
 
-    await exec("corepack enable");
-
     core.info("Installing dependencies");
-    await exec(`npm ci || yarn --immutable`, [], { cwd: directory }).catch(
-      (_err) => {}
-    );
+    await exec(`npm i`, [], { cwd: directory }).catch((_err) => {});
 
     // Build project
     console.info("Building project");
